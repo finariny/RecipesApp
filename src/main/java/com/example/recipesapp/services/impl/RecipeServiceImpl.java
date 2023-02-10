@@ -25,10 +25,6 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe getRecipe(long id) {
-        if (RECIPE_MAP.containsKey(id)) {
-            return RECIPE_MAP.get(id);
-        } else {
-            throw new IllegalArgumentException("Такого рецепта нет!");
-        }
+        return RECIPE_MAP.getOrDefault(id, null);
     }
 }

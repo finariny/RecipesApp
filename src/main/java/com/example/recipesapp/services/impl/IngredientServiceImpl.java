@@ -26,10 +26,6 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient getIngredient(long id) {
-        if (INGREDIENT_MAP.containsKey(id)) {
-            return INGREDIENT_MAP.get(id);
-        } else {
-            throw new IllegalArgumentException("Такого ингредиента нет!");
-        }
+        return INGREDIENT_MAP.getOrDefault(id, null);
     }
 }
