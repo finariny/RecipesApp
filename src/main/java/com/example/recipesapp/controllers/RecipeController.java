@@ -5,6 +5,8 @@ import com.example.recipesapp.services.RecipeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/recipe")
 public class RecipeController {
@@ -29,5 +31,29 @@ public class RecipeController {
         } else {
             return ResponseEntity.ok(recipe);
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Recipe> editRecipe (@PathVariable long id, @RequestBody Recipe newRecipe) {
+        Recipe recipe = recipeService.editRecipe(id, newRecipe);
+        if (recipe == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(recipe);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecipe (@PathVariable long id) {
+        if (recipeService.deleteRecipe(id)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<Long, Recipe>> getListOfAllRecipes() {
+        return ResponseEntity.ok(recipeService.getListOfAllRecipes());
     }
 }

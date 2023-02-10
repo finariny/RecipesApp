@@ -28,4 +28,28 @@ public class IngredientServiceImpl implements IngredientService {
     public Ingredient getIngredient(long id) {
         return INGREDIENT_MAP.getOrDefault(id, null);
     }
+
+    @Override
+    public Ingredient editIngredient(long id, Ingredient ingredient) {
+        if (INGREDIENT_MAP.containsKey(id)) {
+            return INGREDIENT_MAP.replace(id, ingredient);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteIngredient(long id) {
+        if (INGREDIENT_MAP.containsKey(id)) {
+            INGREDIENT_MAP.remove(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Map<Long, Ingredient> getListOfAllIngredients() {
+        return INGREDIENT_MAP;
+    }
 }

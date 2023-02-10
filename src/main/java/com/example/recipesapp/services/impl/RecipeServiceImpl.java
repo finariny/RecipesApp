@@ -27,4 +27,28 @@ public class RecipeServiceImpl implements RecipeService {
     public Recipe getRecipe(long id) {
         return RECIPE_MAP.getOrDefault(id, null);
     }
+
+    @Override
+    public Recipe editRecipe(long id, Recipe recipe) {
+        if (RECIPE_MAP.containsKey(id)) {
+            return RECIPE_MAP.replace(id, recipe);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteRecipe(long id) {
+        if (RECIPE_MAP.containsKey(id)) {
+            RECIPE_MAP.remove(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Map<Long, Recipe> getListOfAllRecipes() {
+        return RECIPE_MAP;
+    }
 }
