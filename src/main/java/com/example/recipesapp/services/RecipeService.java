@@ -5,7 +5,7 @@ import com.example.recipesapp.model.Recipe;
 import java.util.Map;
 
 public interface RecipeService {
-    String addRecipe(Recipe recipe);
+    Recipe addRecipe(Recipe recipe);
 
     Recipe getRecipe(long id);
 
