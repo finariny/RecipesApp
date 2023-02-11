@@ -14,17 +14,41 @@ public class RecipeServiceImpl implements RecipeService {
     private static Long recipeId = 1L;
 
     @Override
-    public long addRecipe(Recipe recipe) {
+    public String addRecipe(Recipe recipe) {
         if (RECIPE_MAP.containsValue(recipe)) {
             throw new IllegalArgumentException("Такой рецепт уже существует!");
         } else {
             RECIPE_MAP.put(recipeId, recipe);
-            return recipeId++;
+            return "Рецепт добавлен! ID рецепта: " + recipeId++;
         }
     }
 
     @Override
     public Recipe getRecipe(long id) {
         return RECIPE_MAP.getOrDefault(id, null);
+    }
+
+    @Override
+    public Recipe editRecipe(long id, Recipe recipe) {
+        if (RECIPE_MAP.containsKey(id)) {
+            return RECIPE_MAP.replace(id, recipe);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean deleteRecipe(long id) {
+        if (RECIPE_MAP.containsKey(id)) {
+            RECIPE_MAP.remove(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public Map<Long, Recipe> getListOfAllRecipes() {
+        return RECIPE_MAP;
     }
 }

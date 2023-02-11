@@ -5,6 +5,8 @@ import com.example.recipesapp.services.IngredientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/ingredient")
 public class IngredientController {
@@ -16,9 +18,8 @@ public class IngredientController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> addIngredient(@RequestBody Ingredient ingredient) {
-        long id = ingredientService.addIngredient(ingredient);
-        return ResponseEntity.ok(id);
+    public ResponseEntity<String> addIngredient(@RequestBody Ingredient ingredient) {
+        return ResponseEntity.ok(ingredientService.addIngredient(ingredient));
     }
 
     @GetMapping("/{id}")
@@ -29,5 +30,29 @@ public class IngredientController {
         } else {
             return ResponseEntity.ok(ingredient);
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ingredient> editIngredient (@PathVariable long id, @RequestBody Ingredient newIngredient) {
+        Ingredient ingredient = ingredientService.editIngredient(id, newIngredient);
+        if (ingredient == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(ingredient);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteIngredient (@PathVariable long id) {
+        if (ingredientService.deleteIngredient(id)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<Map<Long, Ingredient>> getListOfAllIngredients() {
+        return ResponseEntity.ok(ingredientService.getListOfAllIngredients());
     }
 }
