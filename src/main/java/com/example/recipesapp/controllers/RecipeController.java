@@ -18,9 +18,8 @@ public class RecipeController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> addRecipe(@RequestBody Recipe recipe) {
-        long id = recipeService.addRecipe(recipe);
-        return ResponseEntity.ok(id);
+    public ResponseEntity<String> addRecipe(@RequestBody Recipe recipe) {
+        return ResponseEntity.ok(recipeService.addRecipe(recipe));
     }
 
     @GetMapping("/{id}")

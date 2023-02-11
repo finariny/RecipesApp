@@ -18,9 +18,8 @@ public class IngredientController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> addIngredient(@RequestBody Ingredient ingredient) {
-        long id = ingredientService.addIngredient(ingredient);
-        return ResponseEntity.ok(id);
+    public ResponseEntity<String> addIngredient(@RequestBody Ingredient ingredient) {
+        return ResponseEntity.ok(ingredientService.addIngredient(ingredient));
     }
 
     @GetMapping("/{id}")

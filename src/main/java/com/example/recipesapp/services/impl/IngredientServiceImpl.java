@@ -15,12 +15,12 @@ public class IngredientServiceImpl implements IngredientService {
 
 
     @Override
-    public long addIngredient(Ingredient ingredient) {
+    public String addIngredient(Ingredient ingredient) {
         if (INGREDIENT_MAP.containsValue(ingredient)) {
             throw new IllegalArgumentException("Такой ингредиент уже существует!");
         } else {
             INGREDIENT_MAP.put(ingredientId, ingredient);
-            return ingredientId++;
+            return "Ингредиент добавлен! ID ингредиента: " + ingredientId++;
         }
     }
 
