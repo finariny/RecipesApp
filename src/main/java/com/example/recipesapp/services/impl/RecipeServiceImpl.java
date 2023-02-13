@@ -1,7 +1,9 @@
 package com.example.recipesapp.services.impl;
 
+import com.example.recipesapp.model.Ingredient;
 import com.example.recipesapp.model.Recipe;
 import com.example.recipesapp.services.FilesService;
+import com.example.recipesapp.services.IngredientService;
 import com.example.recipesapp.services.RecipeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,9 +20,12 @@ public class RecipeServiceImpl implements RecipeService {
     private static Map<Long, Recipe> RECIPE_MAP = new HashMap<>();
     private static Long recipeId = 1L;
 
+    private final IngredientService ingredientService;
+
     private final FilesService filesService;
 
-    public RecipeServiceImpl(FilesService filesService) {
+    public RecipeServiceImpl(IngredientService ingredientService, FilesService filesService) {
+        this.ingredientService = ingredientService;
         this.filesService = filesService;
     }
 
@@ -35,6 +40,9 @@ public class RecipeServiceImpl implements RecipeService {
             throw new IllegalArgumentException("Такой рецепт уже существует!");
         } else {
             RECIPE_MAP.put(recipeId++, recipe);
+            for (Ingredient ingredient : recipe.getIngredientList()) {
+                ingredientService.addIngredient(ingredient);
+            }
             saveToFile();
             return recipe;
         }

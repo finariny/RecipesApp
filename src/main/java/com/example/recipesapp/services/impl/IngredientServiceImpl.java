@@ -31,13 +31,9 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient addIngredient(Ingredient ingredient) {
-        if (INGREDIENT_MAP.containsValue(ingredient)) {
-            throw new IllegalArgumentException("Такой ингредиент уже существует!");
-        } else {
-            INGREDIENT_MAP.put(ingredientId++, ingredient);
-            saveToFile();
-            return ingredient;
-        }
+        INGREDIENT_MAP.put(ingredientId++, ingredient);
+        saveToFile();
+        return ingredient;
     }
 
     @Override
