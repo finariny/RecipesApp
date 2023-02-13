@@ -1,8 +1,11 @@
 package com.example.recipesapp.model;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 @EqualsAndHashCode
+@Getter
 public class Ingredient {
     private String name;
     private int count;
@@ -15,15 +18,11 @@ public class Ingredient {
     }
 
     public void setName(String name){
-        if (name == null || name.isBlank()) {
+        if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Название ингредиента введено неверно");
         } else {
             this.name = name;
         }
-    }
-
-    public String getName(){
-        return this.name;
     }
 
     public void setCount(int count){
@@ -34,20 +33,12 @@ public class Ingredient {
         }
     }
 
-    public int getCount(){
-        return this.count;
-    }
-
     public void setUnit(String unit){
-        if (unit == null || unit.isBlank()) {
+        if (StringUtils.isBlank(unit)) {
             throw new IllegalArgumentException("Единица измерения ингредиентов введена неверно");
         } else {
             this.unit = unit;
         }
-    }
-
-    public String getUnit() {
-        return this.unit;
     }
 
     @Override

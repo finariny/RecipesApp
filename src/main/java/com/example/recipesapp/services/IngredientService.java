@@ -5,7 +5,7 @@ import com.example.recipesapp.model.Ingredient;
 import java.util.Map;
 
 public interface IngredientService {
-    String addIngredient(Ingredient ingredient);
+    Ingredient addIngredient(Ingredient ingredient);
 
     Ingredient getIngredient(long id);
 

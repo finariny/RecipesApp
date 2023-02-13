@@ -15,12 +15,12 @@ public class IngredientServiceImpl implements IngredientService {
 
 
     @Override
-    public String addIngredient(Ingredient ingredient) {
+    public Ingredient addIngredient(Ingredient ingredient) {
         if (INGREDIENT_MAP.containsValue(ingredient)) {
             throw new IllegalArgumentException("Такой ингредиент уже существует!");
         } else {
-            INGREDIENT_MAP.put(ingredientId, ingredient);
-            return "Ингредиент добавлен! ID ингредиента: " + ingredientId++;
+            INGREDIENT_MAP.put(ingredientId++, ingredient);
+            return ingredient;
         }
     }
 
@@ -32,7 +32,8 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Ingredient editIngredient(long id, Ingredient ingredient) {
         if (INGREDIENT_MAP.containsKey(id)) {
-            return INGREDIENT_MAP.replace(id, ingredient);
+            INGREDIENT_MAP.replace(id, ingredient);
+            return ingredient;
         } else {
             return null;
         }

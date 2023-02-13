@@ -1,10 +1,13 @@
 package com.example.recipesapp.model;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
 @EqualsAndHashCode
+@Getter
 public class Recipe {
     private String name;
     private int cookingTimeInMinutes;
@@ -19,15 +22,11 @@ public class Recipe {
     }
 
     public void setName(String name) {
-        if (name == null || name.isBlank()) {
+        if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Название рецепта введено неверно");
         } else {
             this.name = name;
         }
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public void setCookingTimeInMinutes(int cookingTimeInMinutes) {
@@ -38,10 +37,6 @@ public class Recipe {
         }
     }
 
-    public int getCookingTimeInMinutes() {
-        return this.cookingTimeInMinutes;
-    }
-
     public void setIngredientList(List<Ingredient> ingredientList) {
         if (ingredientList.size() < 1) {
             throw new IllegalArgumentException("В рецепте должны быть указаны ингредиенты");
@@ -50,20 +45,12 @@ public class Recipe {
         }
     }
 
-    public List<Ingredient> getIngredientList() {
-        return ingredientList;
-    }
-
     public void setCookingSteps(List<String> cookingSteps) {
         if (cookingSteps.size() < 1) {
             throw new IllegalArgumentException("В рецепте должны быть указаны шаги приготовления");
         } else {
             this.cookingSteps = cookingSteps;
         }
-    }
-
-    public List<String> getCookingSteps() {
-        return cookingSteps;
     }
 
     @Override
