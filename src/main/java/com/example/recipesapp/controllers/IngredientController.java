@@ -33,6 +33,10 @@ public class IngredientController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Ингредиент добавлен"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "Такой ингредиент уже существует!"
             )
     })
     public ResponseEntity<Ingredient> addIngredient(@RequestBody Ingredient ingredient) {
