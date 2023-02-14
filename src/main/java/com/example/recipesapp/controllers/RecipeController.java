@@ -33,10 +33,6 @@ public class RecipeController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Рецепт добавлен"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "Такой рецепт уже существует!"
             )
     })
     public ResponseEntity<Recipe> addRecipe(@RequestBody Recipe recipe) {

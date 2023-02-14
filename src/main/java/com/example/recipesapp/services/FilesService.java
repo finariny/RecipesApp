@@ -1,11 +1,9 @@
 package com.example.recipesapp.services;
 
+import java.nio.file.Path;
+
 public interface FilesService {
-    boolean saveToRecipesFile(String json);
+    boolean saveToFile(String json, Path path);
 
-    boolean saveToIngredientsFile(String json);
-
-    String readFromRecipesFile();
-
-    String readFromIngredientsFile();
+    String readFromFile(Path path);
 }
