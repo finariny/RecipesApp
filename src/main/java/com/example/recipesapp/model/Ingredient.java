@@ -2,10 +2,12 @@ package com.example.recipesapp.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 @EqualsAndHashCode
 @Getter
+@NoArgsConstructor
 public class Ingredient {
     private String name;
     private int count;
