@@ -3,6 +3,7 @@ package com.example.recipesapp.services.impl;
 import com.example.recipesapp.services.FilesService;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,7 +33,13 @@ public class FilesServiceImpl implements FilesService {
         }
     }
 
-    private boolean cleanFile(Path path) {
+    @Override
+    public File getFile(String filePath, String fileName) {
+        return new File(filePath + "/" + fileName);
+    }
+
+    @Override
+    public boolean cleanFile(Path path) {
         try {
             Files.deleteIfExists(path);
             Files.createFile(path);

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,11 +88,15 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     private void readFromFile() {
+        Path path = Path.of(ingredientsFilePath, ingredientsFileName);
         try {
-            String json = filesService.readFromFile(Path.of(ingredientsFilePath, ingredientsFileName));
+            if (!Files.exists(path)) {
+                Files.createFile(path);
+            }
+            String json = filesService.readFromFile(path);
             ingredientMap = new ObjectMapper().readValue(json, new TypeReference<Map<Long, Ingredient>>() {
             });
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
