@@ -1,6 +1,7 @@
 package com.example.recipesapp.controllers;
 
 import com.example.recipesapp.services.FilesService;
+import com.example.recipesapp.services.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,15 +33,21 @@ public class FilesController {
     @Value("${name.of.recipes.file}")
     private String recipesFileName;
 
+    @Value("${name.of.formatted.recipes.file}")
+    private String formattedRecipesFileName;
+
     @Value("${path.to.ingredients.file}")
     private String ingredientsFilePath;
 
     @Value("${name.of.ingredients.file}")
     private String ingredientsFileName;
-    private final FilesService filesService;
 
-    public FilesController(FilesService filesService) {
+    private final FilesService filesService;
+    private final RecipeService recipeService;
+
+    public FilesController(FilesService filesService, RecipeService recipeService) {
         this.filesService = filesService;
+        this.recipeService = recipeService;
     }
 
     @GetMapping(value = "/export", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +65,7 @@ public class FilesController {
             )
     })
     public ResponseEntity<InputStreamResource> downloadRecipesFile() throws FileNotFoundException {
-        File file = filesService.getFile(recipesFilePath, recipesFileName);
+        File file = filesService.getFile(recipesFilePath, formattedRecipesFileName);
         if (file.exists()) {
             InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
             return ResponseEntity.ok()
@@ -70,6 +77,35 @@ public class FilesController {
         }
     }
 
+    @GetMapping(value = "/export/formatted", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+            summary = "Скачать файл со всеми отформатированными рецептами"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Файл доступен для скачивания"
+            ),
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Файл пуст"
+            )
+    })
+    public ResponseEntity<InputStreamResource> downloadFormattedRecipesFile() throws FileNotFoundException {
+        filesService.saveToFile(recipeService.getFormattedRecipesToString(), Path.of(recipesFilePath, formattedRecipesFileName));
+        File file = filesService.getFile(recipesFilePath, formattedRecipesFileName);
+        if (file.exists()) {
+            InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+            return ResponseEntity.ok()
+                    .contentLength(file.length())
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"FormattedRecipesLog.txt\"")
+                    .body(resource);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
+    }
+
+    @PostMapping(value = "/import/recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Загрузить json-файл с рецептами"
     )
@@ -83,19 +119,15 @@ public class FilesController {
                     description = "Произошла внутренняя ошибка сервера"
             )
     })
-    @PostMapping(value = "/import/recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadRecipesFile(@RequestParam MultipartFile file) {
-        filesService.cleanFile(Path.of(recipesFilePath, recipesFileName));
-        File recipesFile = filesService.getFile(recipesFilePath, recipesFileName);
-        try (FileOutputStream fos = new FileOutputStream(recipesFile)) {
-            IOUtils.copy(file.getInputStream(), fos);
+    public ResponseEntity<Void> uploadRecipesFile(@RequestParam MultipartFile multipartFile) {
+        if (uploadFile(multipartFile, recipesFilePath, recipesFileName)){
             return ResponseEntity.ok().build();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @PostMapping(value = "/import/ingredients", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Загрузить json-файл с ингредиентами"
     )
@@ -109,16 +141,23 @@ public class FilesController {
                     description = "Произошла внутренняя ошибка сервера"
             )
     })
-    @PostMapping(value = "/import/ingredients", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadIngredientsFile(@RequestParam MultipartFile file) {
-        filesService.cleanFile(Path.of(ingredientsFilePath, ingredientsFileName));
-        File ingredientsFile = filesService.getFile(ingredientsFilePath, ingredientsFileName);
-        try (FileOutputStream fos = new FileOutputStream(ingredientsFile)) {
-            IOUtils.copy(file.getInputStream(), fos);
+    public ResponseEntity<Void> uploadIngredientsFile(@RequestParam MultipartFile multipartFile) {
+        if (uploadFile(multipartFile, ingredientsFilePath, ingredientsFileName)){
             return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    private boolean uploadFile(MultipartFile multipartFile, String filePath, String fileName) {
+        filesService.cleanFile(Path.of(filePath, fileName));
+        File file = filesService.getFile(filePath, fileName);
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            IOUtils.copy(multipartFile.getInputStream(), fos);
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

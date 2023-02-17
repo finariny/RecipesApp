@@ -57,7 +57,6 @@ public class Recipe {
 
     @Override
     public String toString() {
-        return "Название рецепта: " + this.name + "; Время приготовления в минутах: " + this.cookingTimeInMinutes +
-                "; Список ингредиентов: " + this.ingredientList + "; Шаги приготовления: " + this.cookingSteps;
+        return this.name + "\nВремя приготовления: " + this.cookingTimeInMinutes + " минут.\n";
     }
 }

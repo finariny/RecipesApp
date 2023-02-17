@@ -12,10 +12,10 @@ import java.nio.file.Path;
 public class FilesServiceImpl implements FilesService {
 
     @Override
-    public boolean saveToFile(String json, Path path) {
+    public boolean saveToFile(String content, Path path) {
         try {
             cleanFile(path);
-            Files.writeString(path, json);
+            Files.writeString(path, content);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
