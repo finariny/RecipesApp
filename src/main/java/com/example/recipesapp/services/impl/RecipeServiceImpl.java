@@ -27,6 +27,9 @@ public class RecipeServiceImpl implements RecipeService {
     @Value("${name.of.recipes.file}")
     private String recipesFileName;
 
+    @Value("${name.of.formatted.recipes.file}")
+    private String formattedRecipesFileName;
+
     private Map<Long, Recipe> recipeMap = new HashMap<>();
     private static Long recipeId = 1L;
 
@@ -88,6 +91,28 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public Map<Long, Recipe> getListOfAllRecipes() {
         return recipeMap;
+    }
+
+    @Override
+    public String getFormattedRecipesToString() {
+        int recipeNumber = 1;
+        String listMarker = " • ";
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Recipe recipe : recipeMap.values()) {
+            int listNumber = 1;
+            stringBuilder.append("\n").append("Рецепт №").append(recipeNumber).append("\n").append(recipe.toString());
+            stringBuilder.append("Ингредиенты:\n");
+            for (Ingredient ingredient : recipe.getIngredientList()) {
+                stringBuilder.append(listMarker).append(ingredient.toString()).append("\n");
+            }
+            stringBuilder.append("Инструкция приготовления:\n");
+            for (String cookingStep : recipe.getCookingSteps()) {
+                stringBuilder.append(" ").append(listNumber).append(" ").append(cookingStep).append("\n");
+                listNumber++;
+            }
+            recipeNumber++;
+        }
+        return stringBuilder.append("\n").toString();
     }
 
     private void saveToFile() {

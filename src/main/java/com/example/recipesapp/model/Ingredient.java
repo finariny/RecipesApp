@@ -45,7 +45,6 @@ public class Ingredient {
 
     @Override
     public String toString() {
-        return "Название ингредиента: " + this.name + "; Количество ингредиентов: " + this.count +
-                "; Единица измерения ингредиентов: " + this.unit;
+        return this.name + " — " + this.count + " " + this.unit;
     }
 }
